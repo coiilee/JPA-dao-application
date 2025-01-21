@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>책 상세정보</title>
+    <link rel="icon" href="/favicon.ico">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+</head>
+<body>
+<h1>책 정보 상세보기</h1>
+<div id="bookDetail"></div>
+
+<script>
+    const urlParams = new URLSearchParams(window.location.search)
+    const bookId = urlParams.get('id');
+    console.log("bookid : " ,bookId);
+
+    $.ajax({
+        url: `/api/book/${bookId}`,
+        method: "GET",
+        success: function (book){
+            if(book){
+
+                $('#bookDetail').append(
+                    `<h1>제목 : ${book.title}</h1>
+                    <p>저자 : ${book.author}</p>
+                    <p>장르 : ${book.genre}</p>`
+                )
+            } else {
+                $('#bookDetail').html('<p>조회되지 않는 책입니다.</p>');
+            }
+        },
+        error : function (error){
+            console.log("에러: " ,error);
+            $('#bookDetail').html("서버에서 데이터를 가져오는데 실패했습니다.");
+        }
+    })
+</script>
+</body>
+</html>

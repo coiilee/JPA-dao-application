@@ -1,6 +1,6 @@
 package edu.kh.com.daoapplication.repository;
 
-import edu.kh.com.daoapplication.dao.KHTUser;
+import edu.kh.com.daoapplication.entity.KHTUser;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 /*
@@ -13,6 +13,10 @@ ex) 아이디 찾기 = findById
        삭제    =  delete
      전체조회   =  findAll
  */
+
+//DAO - Repository
+//DAO-> 축소해서 작성한 것이 Repository
+
 @Repository
 public interface KHTUserRepository extends JpaRepository<KHTUser, Long> {
         //mapper로 작성했을 때 mybatis에서 작성한 id명칭으로 쿼리(sql)을 불러왔다면
@@ -21,7 +25,6 @@ public interface KHTUserRepository extends JpaRepository<KHTUser, Long> {
         //유저 네임 이용해 비밀번호 찾기
         KHTUser findByUsername(String username);
 
-        //아이디를 이용해 찾기
         KHTUser findById(int id);
 
 

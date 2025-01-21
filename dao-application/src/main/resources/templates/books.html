@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>책 조회</title>
+    <link rel="icon" href="/favicon.ico">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+</head>
+<body>
+<h1> 책 조회하기 </h1>
+<ul id="bookList"></ul>
+<script>
+    const bookList = $('#bookList');
+
+    $.ajax({
+        url: '/api/books',
+        method: 'GET',
+        success: function (data) {
+            $.each(data, function (index, books) {
+                bookList.append(
+                  `<table>
+    <tr>
+        <th>ID</th>
+        <th>제목</th>
+        <th>저자</th>
+        <th>장르</th>
+    </tr>
+     <tr>
+        <td>${books.id}</td>
+        <td><a href="/book/?id=${books.id}">${books.title}</a></td>
+        <td>${books.author}</td>
+        <td>${books.genre}</td>
+    </tr>
+</table>`
+                )
+            })
+        },
+        error: function (error) {
+            $('#bookList').html('데이터를 가져오는데 문제가 발생했습니다.');
+        }
+    })
+</script>
+</body>
+</html>
