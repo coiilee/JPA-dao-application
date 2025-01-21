@@ -64,7 +64,7 @@
             success: function (data) {
                 $.each(data, function (index, item) {
                     $('#productList').append(
-                        '<li>' + item.name+ ' </li>',
+                        '<li>' + item.name + ' </li>',
                     )
                 })
             },
@@ -85,41 +85,46 @@
     <input type="text" id="description" name="description">
     <label for="productstock">재고 : </label>
     <input type="text" id="productstock" name="productstock">
-    <button>제품저장</button>
+    <button id="saveProductButton" type="button">제품저장</button>
 </form>
 <script>
-    $('#productForm').submit(function (e) {
-        e.preventDefault(); //form 제출 전 잠깐 멈추기 상태
+    $('#saveProductButton').click(function (e) {
+            e.preventDefault(); //form 제출 전 잠깐 멈추기 상태
 
-        const productname = $('#productname');
-        const productprice = $('#productprice');
-        const description = $('#description');
-        const productstock = $('#productstock');
+            const productname = $('#productname').val();
+            const productprice = $('#productprice').val();
+            const description = $('#description').val();
+            const productstock = $('#productstock').val();
 
-        $.ajax({
-            url: "api/saveProduct",
-            method: "POST",
-            contentType: "application/json",
-            data: JSON.stringify({
-                name: productname.val(),
-                price: productprice.val(),
-                description: description.val(),
-                stock: productstock.val()
-            }),
-            success:
-                function (data) {
-                    alert("상품 등록이 완료되었습니다.");
-                    getProductList();
-                    productname.val('');
-                    productprice.val('');
-                    description.val('');
-                    productstock.val('');
-                },
-            error: function (error) {
-                alert("제품 등록에 실패했습니다.");
-            }
+if(!productname || !productprice || !description || !productstock){
+    alert("모든 필드를 입력해주세요.");
+    return; //작성 안하면 제출 못하게 방지.
+}
+
+            $.ajax({
+                url: "api/saveProduct",
+                method: "POST",
+                contentType: "application/json",
+                data: JSON.stringify({
+                    name: productname,
+                    price: productprice,
+                    description: description,
+                    stock: productstock
+                }),
+                success:
+                    function (data) {
+                        alert("상품 등록이 완료되었습니다.");
+                        getProductList();
+                        $('#productname').val('');
+                        $('#productprice').val('');
+                        $('#description').val('');
+                        $('#productstock').val('');
+                    },
+                error: function (error) {
+                    alert("제품 등록에 실패했습니다.");
+                }
+            })
         })
-    })
 </script>
 </body>
 </html>
