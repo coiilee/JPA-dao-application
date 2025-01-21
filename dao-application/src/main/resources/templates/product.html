@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>제품조회</title>
+    <style>
+        body {
+            margin: 20px;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            background: #eee;
+            margin: 5px 0;
+            padding: 10px;
+            border-radius: 4px;
+        }
+
+        form {
+            margin-top: 20px;
+        }
+
+        input {
+            margin: 5px;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        button {
+            padding: 10px 15px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #218838;
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+</head>
+<body>
+<h1>제품조회</h1>
+<ul id="productList"></ul>
+<script>
+    function getProductList() {
+        $.ajax({
+            url: "api/products",
+            method: "get",
+            success: function (data) {
+                $.each(data, function (index, item) {
+                    $('#productList').append(
+                        '<li>' + item.name+ ' </li>',
+                    )
+                })
+            },
+            error: function (error) {
+                $('#productList').html("데이터를 가져오는데 오류가 발생했습니다.");
+            }
+        })
+    }
+</script>
+
+<h1>제품 등록 </h1>
+<form id="productForm">
+    <label for="productname">상품 이름 : </label>
+    <input type="text" id="productname" name="productname">
+    <label for="productprice">가격 : </label>
+    <input type="text" id="productprice" name="productprice">
+    <label for="description">설명 : </label>
+    <input type="text" id="description" name="description">
+    <label for="productstock">재고 : </label>
+    <input type="text" id="productstock" name="productstock">
+    <button>제품저장</button>
+</form>
+<script>
+    $('#productForm').submit(function (e) {
+        e.preventDefault(); //form 제출 전 잠깐 멈추기 상태
+
+        const productname = $('#productname');
+        const productprice = $('#productprice');
+        const description = $('#description');
+        const productstock = $('#productstock');
+
+        $.ajax({
+            url: "api/saveProduct",
+            method: "POST",
+            contentType: "application/json",
+            data: JSON.stringify({
+                name: productname.val(),
+                price: productprice.val(),
+                description: description.val(),
+                stock: productstock.val()
+            }),
+            success:
+                function (data) {
+                    alert("상품 등록이 완료되었습니다.");
+                    getProductList();
+                    productname.val('');
+                    productprice.val('');
+                    description.val('');
+                    productstock.val('');
+                },
+            error: function (error) {
+                alert("제품 등록에 실패했습니다.");
+            }
+        })
+    })
+</script>
+</body>
+</html>
