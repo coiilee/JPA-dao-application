@@ -56,5 +56,11 @@ public class ViewController {
     }
 
 
+    //이메일 인증 주소
+    @GetMapping("/inputEmail")
+    public String inputEmail(){
+        return "inputEmail";
+    }
+
 
 }

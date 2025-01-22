@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>이메일 인증하기</title>
+    <link rel="icon" href="/favicon.ico">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+</head>
+<body>
+    <h1>이메일 인증하기</h1>
+    <input type="text" name="email" id="emailInput" placeholder="인증할 이메일 입력" >
+    <button id="sendCodeBtn" >인증번호 보내기</button>
+    <script>
+        let isVerified = false;
+        //만약에 이메일을 변경해서 작성하면 인증 확인한 상태 초기화
+        $('#emailInput').on("input", function (){
+            //input값 변화가 생기면 인증번호 입력창 초기화 및 비활성화
+            $('#codeInput').val('').prop("disabled",true);
+            //인증번호 확인 버튼 비활성화
+            $('#checkCodeBtn').prop("disabled",true);
+            //인증상태 초기화
+            isVerified = false;
+
+        })
+
+
+        // 이메일 입력 전 인증번호 입력칸, 확인버튼 비활성화
+            $("#codeInput").prop("disabled", true);
+            $("#checkCodeBtn").prop("disabled", true);
+
+        // 이메일로 인증번호 보내기 버튼을 클릭하면!!
+        $("#sendCodeBtn").click(function () {
+            // $("#emailInput").val(); //사용자가 작성한 이메일값 가져오기
+            let email = $("#emailInput").val().toLowerCase();
+            // 만약에 이메일 입력안함
+            if(!email){
+                alert("이메일을 입력해주세요.");
+                return;
+            }
+
+            $.ajax({
+                url:'/api/sendCode',
+                method:'POST',
+                contentType:'application/json', // 415 (Unsupported Media Type)
+                data:JSON.stringify({email:email}),
+                success:function (data) {
+                    alert(data);
+
+                    // 이메일 전송 버튼 클릭 시 인증번호 입력 칸과 확인 버튼 활성화
+                    $("#codeInput").prop("disabled", false);
+                    $("#checkCodeBtn").prop("disabled", false);
+                },
+                error:function (error) {
+                    alert(error);
+                }
+            })
+        })
+    </script>
+
+    <input id="codeInput" placeholder="인증번호 입력" type="text" disabled>
+    <button id="checkCodeBtn" disabled>인증번호 확인</button>
+    <script>
+
+
+        $("#checkCodeBtn").click(function () {
+
+            let email = $("#emailInput").val().toLowerCase();
+            let code = $("#codeInput").val();
+            console.log("email : " + email);
+            console.log("code : " + code);
+            $.ajax({
+                url:'/api/checkCode',
+                method:'POST',
+                contentType:'application/json',
+                data:JSON.stringify({email:email,code:code}),
+                success:function (data) {
+                    alert("인증번호가 전송되었습니다!");
+
+                    //이메일 수정되면 인증번호 입력창 비활
+                    $("#codeInput").prop("disabled", true);
+                    $("#checkCodeBtn").prop("disabled", true);
+                    isVerified = true;
+
+
+                },
+                error:function (error) {
+                    alert(error);
+                }
+
+            })
+        })
+    </script>
+</body>
+</html>

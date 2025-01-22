@@ -3,9 +3,11 @@ package edu.kh.com.daoapplication.controller;
 import edu.kh.com.daoapplication.entity.KHTBook;
 import edu.kh.com.daoapplication.entity.KHTProduct;
 import edu.kh.com.daoapplication.entity.KHTUser;
+import edu.kh.com.daoapplication.model.vo.VerificationRequest;
 import edu.kh.com.daoapplication.service.KHTBookService;
 import edu.kh.com.daoapplication.service.KHTProductService;
 import edu.kh.com.daoapplication.service.KHTUserService;
+import edu.kh.com.daoapplication.service.VerificationService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -134,5 +136,39 @@ public class ApiController {
         return khtBookService.save(title, author,genre,file);
     }
 
+    /**************************** 이메일 인증 ***********************************/
+    @Autowired
+    private VerificationService verificationService;
+
+    @PostMapping("/sendCode")
+    public String sendCode(@RequestBody VerificationRequest vr) {
+        System.out.println("=== Request Controller /api/sendCode ===");
+        String email = vr.getEmail();
+        System.out.println("controller - email : " + email);
+
+        String code = verificationService.randomCode();
+        System.out.println("controller - code : " + code);
+
+        verificationService.saveEmailCode(email, code);
+        System.out.println("controller - Save method  : "+ email + "  -> " + code);
+
+        verificationService.sendEmail(email, code);
+        System.out.println("controller - 이메일을 성공적으로 보냄 : " + code);
+
+        return "이메일을 성공적으로 보냈습니다." + email;
+    }
+
+    // 인증번호 일치하는지 확인
+    @PostMapping("/checkCode")
+    public String checkCode(@RequestBody VerificationRequest vr) {
+        boolean isValid = verificationService.verifyCodeWithVO(vr);
+        System.out.println(" Controller - checkCode method  isValid : " + isValid);
+
+        if (isValid) {
+            return "인증번호가 일치합니다.";
+        } else {
+            return "인증번호가 일치하지 않습니다.";
+        }
+    }
 
 }
