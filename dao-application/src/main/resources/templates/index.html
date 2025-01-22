@@ -112,6 +112,8 @@
     <input type="text" id="username" name="username">
     <label for="password">비밀번호: </label>
     <input type="password" id="password" name="password">
+    <label for="imagePath">프로필 이미지 : </label>
+    <input id="imagePath" name="imagePath" type="file">
     <button>등록</button> <!--button type = "submit" (기본값) -->
 </form>
 <script>
@@ -120,41 +122,23 @@
 
         const username = $('#username').val();
         const password = $('#password').val();
-        //유효성
-        const usernameRegex = /^[a-zA-Z0-9]{5,15}$/;
-        const passwordRegex = /^(?=.[A-Za-z])(?=.\\d)[A-Za-z\\d]{8,}$/;
+        const formData = new FormData();
+        formData.append("username",username);
+        formData.append("password",password);
+        formData.append("file",$("#imagePath")[0].files[0]); //file 컨트롤러에 저장할 이름
 
-        //정규식에 일치하게 작성했는지 , 빈칸인지 아닌지 확인
-        if (!username){
-            alert("등록하려는 아이디를 작성하세요");
-            return;
-        }
-        if(!password){
-            alert("비밀번호를 작성하세요");
-            return;
-        }
-        //정규식에 맞게 작성했는지
-        // if (!usernameRegex.test(username)){
-        //     alert("아이디는 5~15자 영문 및 숫자로만 작성해야합니다.");
-        //     return;
-        // }
-        // if (!passwordRegex.test(password)){
-        //     alert("비밀번호는 최소 8자, 하나 이상의 문자 및 숫자를 포함해야합니다.");
-        //     return;
-        // }
 
 
         $.ajax({
-            url: "api/saveUser", //APIController에 api 주소 이름과 동일하게
+            url: "api/saveUserImage", //APIController에 api 주소 이름과 동일하게
             method: "POST",
-            contentType: "application/json", //글자 형식을 저장한다고 작성
-            data: JSON.stringify({
-                username: username,
-                password: password
-            }),
+            processData: false,
+            contentType: false,
+            data: formData,
             success:
                 function () {
                     alert("유저가 성공적으로 등록되었습니다.");
+                    window.location.href="/user";
                     $('#userList').append('<li>' + username + '</li>');
                     $('#username').val(''); //작성한 유저네임 value 값 비우기
                     $('#password').val(''); //작성한 유저네임 value 값 비우기
@@ -165,6 +149,32 @@
                 }
         })
     })
+</script>
+
+<script>
+    //유효성
+    const usernameRegex = /^[a-zA-Z0-9]{5,15}$/;
+    const passwordRegex = /^(?=.[A-Za-z])(?=.\\d)[A-Za-z\\d]{8,}$/;
+
+    //정규식에 일치하게 작성했는지 , 빈칸인지 아닌지 확인
+    if (!username){
+        alert("등록하려는 아이디를 작성하세요");
+        // return;
+    }
+    if(!password){
+        alert("비밀번호를 작성하세요");
+        // return;
+    }
+    //정규식에 맞게 작성했는지
+    // if (!usernameRegex.test(username)){
+    //     alert("아이디는 5~15자 영문 및 숫자로만 작성해야합니다.");
+    //     return;
+    // }
+    // if (!passwordRegex.test(password)){
+    //     alert("비밀번호는 최소 8자, 하나 이상의 문자 및 숫자를 포함해야합니다.");
+    //     return;
+    // }
+
 </script>
 
 

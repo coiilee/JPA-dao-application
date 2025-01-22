@@ -21,13 +21,16 @@
     $.ajax({
         url: `/api/book/${bookId}`, //id 값 가져오는 방법: js에서 제공하는 URL SEARCH PARAMETERS를 써서 GET 해오는것.
         method: "GET",
-        success: function (book){
-            if(book){
+        success: function (data){
+            if(data){
                 $('#bookDetail').append(
-                    `<h1>${book.id}</h1>
-                    <p>제목 : ${book.title}</p>
-                    <p>저자 : ${book.author}</p>
-                    <p>장르 : ${book.genre}</p>`
+                    `<h1>${data.id}</h1>
+                    <img src="${data.imagePath}">
+                    <p>제목 : ${data.title}</p>
+                    <p>저자 : ${data.author}</p>
+                    <p>장르 : ${data.genre}</p>
+
+`
                 )
             } else {
                 $('#bookDetail').html('<p>조회되지 않는 책입니다.</p>');

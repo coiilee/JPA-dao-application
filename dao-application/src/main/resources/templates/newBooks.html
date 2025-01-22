@@ -8,26 +8,29 @@
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 </head>
 <body>
-    <h1>책 등록 페이지</h1>
+<h1>책 등록 페이지</h1>
 
-    <!-- 등록하는 방식 3가지 활용
-    1. form 태그를 이용해 form 태그 내에 작성한 id 값으로 submit 해서 데이터 저장
-    2. form 태그 내 button type 을 button 형식으로 변경하고, click 해서 데이터 저장
-    3. div 태그 내 button type 을 button 형식으로 변경하고 click 해서 데이터 저장 -->
+<!-- 등록하는 방식 3가지 활용
+1. form 태그를 이용해 form 태그 내에 작성한 id 값으로 submit 해서 데이터 저장
+2. form 태그 내 button type 을 button 형식으로 변경하고, click 해서 데이터 저장
+3. div 태그 내 button type 을 button 형식으로 변경하고 click 해서 데이터 저장 -->
 
-    <!-- 3번 방식 활용 -->
-    <div id="saveBook">
-        <form id="saveBookForm">
-            <label for="bookName">책 제목 : </label>
-            <input id="bookName" name="bookName" type="text" required/>
-            <label for="author">저자 : </label>
-            <input id="author" name="author" type="text" required/>
-            <label for="genre">장르 : </label>
-            <input id="genre" name="genre" type="text" required/>
-            <button type="button" id="bookSaveBtn">등록하기</button>
-        </form>
-    </div>
-    <!-- 2번 방식-->
+<!-- 3번 방식 활용 -->
+<div id="saveBook">
+    <form id="saveBookForm">
+        <label for="bookName">책 제목 : </label>
+        <input id="bookName" name="bookName" type="text" required/>
+        <label for="author">저자 : </label>
+        <input id="author" name="author" type="text" required/>
+        <label for="genre">장르 : </label>
+        <input id="genre" name="genre" type="text" required/>
+        <label for="imagePath">이미지 선택</label>
+        <input type="file" id="imagePath" required>
+
+        <button type="button" id="bookSaveBtn">등록하기</button>
+    </form>
+</div>
+<!-- 2번 방식-->
 <!--    <div id="saveBook"></div>-->
 <!--    <form id="saveBookForm">-->
 <!--        <label for="bookName">책 이름 : </label>-->
@@ -46,6 +49,12 @@
         const bookName = $('#bookName').val();//input 으로 들어오는 value 값 가져오기
         const bookAuthor = $('#author').val();
         const bookGenre = $('#genre').val();
+        const formData = new FormData(); //이미지 데이터를 포함해서 전달하는 기능 사용
+        formData.append("title",bookName);
+        formData.append("author",bookAuthor);
+        formData.append("genre",bookGenre);
+        formData.append("file",$("#imagePath")[0].files[0]); //file 컨트롤러에 저장할 이름
+
 
         if (!bookName || !bookAuthor || !bookGenre) {
             alert("모든 필드를 입력해주세요.");
@@ -53,25 +62,22 @@
         }
 
         $.ajax({
-            url: '/api/bookSave',
+            url: '/api/bookSaveImg',
             method: 'POST',
-            contentType: "application/json",
-            data:
-                JSON.stringify({
-                title: bookName,
-                author: bookAuthor,
-                genre: bookGenre
-            }),
+            processData: false,
+            contentType: false,
+            data: formData,
             success:
-                function (data) {
+                function () {
                     alert("책이 성공적으로 등록되었습니다.");
                     //window = 우리가 보는 화면 창 , location=지역 ,  href=주소
-                    window.location.href="/books"; //view controller 에서 책 목록 확인하는 api url 주소
+                    window.location.href = "/books"; //view controller 에서 책 목록 확인하는 api url 주소
                     $('#bookName').val('');
                     $('#author').val('');
-                    $('#genre').val(''); // 만약 창 이동 후에도
+                    $('#genre').val(''); // 만약에 창 이동을 하지 않을 경우 기존에 작성한
+                    // title, author, genre 에 .val('') 을 넣어 값 비우기 설정
                 },
-            error: function (){
+            error: function () {
                 console.log(this.error);
                 alert("책 등록에 실패했습니다.");
 

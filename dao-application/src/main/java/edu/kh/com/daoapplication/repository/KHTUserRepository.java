@@ -28,4 +28,6 @@ public interface KHTUserRepository extends JpaRepository<KHTUser, Long> {
         KHTUser findById(int id);
 
 
+
+
 }

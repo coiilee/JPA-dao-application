@@ -29,7 +29,8 @@
             if(data){
             $('#userDetail').html(
                 `<p><strong>유저 닉네임 : </strong>${data.username}</p>
-                 <p><strong>유저 비밀번호 : </strong>${data.password}</p>`
+                 <p><strong>유저 비밀번호 : </strong>${data.password}</p>
+                   <img src="${data.imagePath}">`
             );
             } else {
                 $('#userDetail').html("<p>조회되지 않는 회원입니다.</p>");
