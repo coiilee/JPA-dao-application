@@ -9,7 +9,18 @@
 </head>
 <body>
 <h1> 책 조회하기 </h1>
-<ul id="bookList"></ul>
+<table class="books-table">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>제목</th>
+        <th>저자</th>
+        <th>장르</th>
+    </tr>
+    </thead>
+    <tbody  id="bookList">
+
+    </tbody>
 <script>
     const bookList = $('#bookList');
 
@@ -19,18 +30,12 @@
         success: function (data) {
             $.each(data, function (index, books) {
                 bookList.append(
-                  `<table>
-    <tr>
-        <th>ID</th>
-        <th>제목</th>
-        <th>저자</th>
-        <th>장르</th>
-    </tr>
+                  `
      <tr>
-        <td>${books.id}</td>
-        <td><a href="/book/?id=${books.id}">${books.title}</a></td>
-        <td>${books.author}</td>
-        <td>${books.genre}</td>
+        <th>${books.id}</th>
+        <th><a href="/book/?id=${books.id}">${books.title}</a></th>
+        <th>${books.author}</th>
+        <th>${books.genre}</th>
     </tr>
 </table>`
                 )

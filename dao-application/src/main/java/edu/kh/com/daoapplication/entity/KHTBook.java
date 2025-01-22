@@ -1,22 +1,22 @@
 package edu.kh.com.daoapplication.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 
-@Entity
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
+@Entity
 public class KHTBook {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String title;
+    @Column(nullable = false, unique = true)
+    private String title; //column 작성 안할 경우 기본값 (nullable= true , unique = false)
+    @Column(nullable = false, unique = true)
     private String author;
+    @Column(nullable = false, unique = true)
     private String genre;
 }

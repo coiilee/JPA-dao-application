@@ -103,6 +103,8 @@ public class ApiController {
     }
 
     // 📝 책 저장 API
+    //405 (Method Not Allowed) GET으로는 DB 저장 X 라는 의미.
+    //Request method 'POST' is not supported 
     @PostMapping("/bookSave")
     public KHTBook apiSaveBook(@RequestBody KHTBook khtBook) {
         KHTBook saveBook = khtBookService.save(khtBook);

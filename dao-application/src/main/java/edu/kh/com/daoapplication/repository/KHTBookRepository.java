@@ -9,6 +9,9 @@ import java.util.List;
 @Repository
 public interface KHTBookRepository extends JpaRepository<KHTBook, Long> {
 
+    //findAll
+    //save
+
     KHTBook findById(long id);
 
 }

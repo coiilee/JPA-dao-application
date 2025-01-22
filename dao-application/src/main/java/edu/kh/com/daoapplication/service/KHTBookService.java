@@ -9,7 +9,8 @@ import java.util.List;
 
 @Service
 public class KHTBookService {
-    @Autowired KHTBookRepository khtBookRepository;
+    @Autowired
+    private KHTBookRepository khtBookRepository;
 
     //모든 책 조회하기
     public List<KHTBook> findAll(){
